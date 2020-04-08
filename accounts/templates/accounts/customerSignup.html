@@ -1,0 +1,33 @@
+{%extends 'accounts/base.html'%}
+{%load crispy_forms_tags%}
+{%block content%}
+<div class="container">
+    <div class="card text-white shadow-lg" style=background-color:#44505e;>
+      <div class="card-header text-white" style=background-color:dodgerblue;>
+        <legend>Create A Free Customer Account.</legend>
+        </div>
+        <div class="card-body">
+<form method="POST" action="">
+  <div class="row">
+  <div class="col-sm-6">
+{%csrf_token%}
+{{form.username|as_crispy_field}}
+{{form.first_name|as_crispy_field}}
+{{form.last_name|as_crispy_field}}
+{{form.email|as_crispy_field}}
+{{form.password1|as_crispy_field}}
+{{form.password2|as_crispy_field}}
+</div>
+<div class="col-sm-6">
+  {{form.interest|as_crispy_field}}
+  </div>
+</div>
+<div class="signbutton" align=center>
+<button class="btn btn-primary text-white col-sm-4">Sign Up</button>
+</div>
+  </form>
+  </div>
+  </div>
+  </div>
+  </div>
+{%endblock%}

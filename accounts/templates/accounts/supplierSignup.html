@@ -1,0 +1,22 @@
+{%extends 'accounts/base.html'%}
+{%load crispy_forms_tags%}
+{%block content%}
+<div class="container">
+  <div class="col-sm-12">
+    <div class="card text-white shadow-lg" style=background-color:#44505e;>
+      <div class="card-header text-white" style=background-color:dodgerblue;>
+<legend>Create A Free Suppliers Account.</legend>
+</div>
+<div class="col-sm-6">
+<form method="POST" action="">
+{%csrf_token%}
+{{form|crispy}}
+<div class="sup" align=center>
+<button class="btn btn-primary text-white col-sm-6 m-2">Sign Up</button>
+</div>
+  </form>
+  </div>
+  </div>
+  </div>
+  </div>
+{%endblock%}

@@ -1,0 +1,45 @@
+{%extends 'accounts/base.html'%}
+{%block content%}
+<div class="container">
+<div class="card card-fluid shadow-lg">
+  <div class="row">
+  <div class="col-sm-5">
+    <img src="{{productdetails.image.url}}" class="img-fluid p-1" height="180" alt="edit">
+    </div>
+    <div class="col-sm-7">
+      <div class="item" style=color:#55b000;>
+      <legend>{{productdetails.item}}</legend>
+      </div>
+      <div class="description" style=color:#55b000;>
+        {{productdetails.description}}
+        </div>
+          <div class="date"style=color:#55b000;>
+            <div class="row m-1">
+              <b class="text-muted">Date Added:- </b>{{productdetails.date_updated}}
+              </div>
+            </div>
+            <hr>
+            <div class="price" style=color:#55b000;>
+              <h4>Ksh {{productdetails.price}}</h4>
+              </div>
+      <div class="row" align=center>
+        <div class="col-sm-6">
+        <div class="update m-1">
+          <a href="{%url 'business:update' productdetails.id%}"><button class="btn text-white col-sm-6 p-1" style=background-color:#3038ed;><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update</button></a>
+          </div>
+          </div>
+        <div class="col-sm-6">
+      <div class="delete m-1">
+        <a href="{%url 'business:delete' productdetails.id%}"><button class="btn text-white col-sm-6 p-1" style=background-color:#d54936;><i class="fa fa-trash" aria-hidden="true"></i> Delete</button></a>
+        </div>
+        </div>
+          </div>
+          <hr>
+      </div>
+      </div>
+  </div>
+
+  </div>
+  style=color:#2d188d;
+
+{%endblock%}

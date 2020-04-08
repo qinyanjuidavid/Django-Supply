@@ -1,0 +1,23 @@
+{%extends 'accounts/base.html'%}
+{%load crispy_forms_tags%}
+{%block content%}
+<div class="container" align=center>
+  <div class="col-sm-8" align=left>
+  <div class="card text-white" style=background-color:#44505e;>
+    <div class="card-header" style=background-color:dodgerblue;>
+      <legend>Add Products</legend>
+      </div>
+      <div class="body m-4">
+<form method="POST" action="" enctype="multipart/form-data">
+{%csrf_token%}
+{{form|crispy}}
+<div class="mybtn" align=center>
+<button class="btn btn-primary col-sm-5">Add Product</button>
+</div>
+  </form>
+  </div>
+  </div>
+  </div>
+  </div>
+
+{%endblock%}

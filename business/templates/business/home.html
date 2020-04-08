@@ -1,0 +1,172 @@
+{%extends 'accounts/base.html'%}
+{%load static%}
+{%load leaflet_tags%}
+{%load geojson_tags%}
+{%block content%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+{% leaflet_js%}
+{% leaflet_css%}
+
+{%if user.is_supplier and user.is_authenticated%}
+<div class="jumbotron shadow-lg">
+  <div class="row">
+    Welcome {{user.username}},
+<div class="container">
+    <div class="addbutton" align=left>
+      <a href="{%url 'business:addProduct'%}"><button class="btn text-white " style=background-color:#9232d3;><i class="fa fa-plus"></i> Add Products</button></a>
+      </div>
+  <div class="row" align=center>
+  {%for product in product%}
+<div class="card m-2" style=background-color:#f68b1e; align=center>
+  <img src="{{product.image.url}}" height="200" width="180" alt="edit">
+  <a href="{%url 'business:details' product.id%}">
+    <div class="card m-1">
+  <div class="item">
+  {{product.item}}
+  </div>
+  <div class="price">
+  <b>Ksh.{{product.price}}</b>
+  </div>
+  </div>
+  </a>
+  </div>
+  {%endfor%}
+  </div>
+  </div>
+  </div>
+  </div>
+
+  {%elif user.is_customer and user.is_authenticated%}
+  <div class="container-fluid">
+    <div class="row">
+    <div class="col-sm-3 shadow-lg" style=height:43rem;background-color:#2c3e50;>
+    <div id="search">
+    <a id="room-name-input"><i class="fa fa-envelope fa-lg float-right m-2" id="room-name-submit" style=color:lavender;></i></a>
+      <!--<p class="text-white" id="room-name-input"><button class="btn" id="room-name-submit">group</button></p>-->
+
+      <script>
+          document.querySelector('#room-name-input').focus();
+          document.querySelector('#room-name-input').onkeyup = function(e) {
+              if (e.keyCode === 13) {  // enter, return
+                  document.querySelector('#room-name-submit').click();
+              }
+          };
+
+          document.querySelector('#room-name-submit').onclick = function(e) {
+            var roomName='group';
+              window.location.pathname = '/chat/' + roomName + '/';
+          };
+      </script>
+
+
+      <form class="form-inline m-2">
+        <i class="fa fa-search text-white btn" aria-hidden="true"></i>
+        <input class="form-control form-control-sm ml-1 w-75" type="text" placeholder="Search" aria-label="Search">
+      </form>
+    </div>
+    <div id="contacts">
+      <ul>
+        {%for supplier in supplier%}
+          <div class="wraper">
+            <a href="{%url 'business:supplierdetails' supplier.id%}"><img src="{{supplier.image.url}}" class="rounded-circle m-1" width="70" height='70' alt="edit"></a>
+            <div class="meta">
+              <a href="{%url 'business:supplierdetails' supplier.id%}"><p class="name ml-2 text-white">{{supplier.user.username}}</p></a>
+            </div>
+          </div>
+          {%endfor%}
+      </ul>
+    </div>
+    </div>
+    <div class="col-sm-9 shadow-lg bg-white">
+      <style type="text/css">
+        #gis {width:100%;height:620px;
+        }
+        </style>
+        <script type="text/javascript" src="{% static 'leaflet.ajax.js' %}" ></script>
+
+	<link rel="stylesheet" type="text/css" href="{% static 'leaflet.groupedlayercontrol.css' %}">
+	<script type="text/javascript" src="{% static 'leaflet.groupedlayercontrol.js' %}" ></script>
+
+  <script type="text/javascript" src="{% static 'leaflet-routing-machine.js' %}" ></script>
+  	<link rel="stylesheet" type="text/css" href="{% static 'leaflet-routing-machine.css' %}">
+
+    <script type="text/javascript" src="{% static 'easy-button.js' %}" ></script>
+    	<link rel="stylesheet" type="text/css" href="{% static 'easy-button.css' %}">
+<h1>Map</h1>
+<script type="text/javascript">
+function our_layers(map,options){
+  var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				maxZoom: 19,
+				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+			});
+    var OpenTopoMap = L.tileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+			maxZoom: 17,
+			attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+		});
+  var datasets=new L.GeoJSON.AJAX("{%url 'business:county'%}",{
+    style: function colors(feature){
+    switch(feature.properties.name){
+      case 'WAJIR':
+        return{
+          color: 'orange',
+          fillOpacity: 0.8
+        };
+      break;
+      case 'ISIOLO':
+        return{
+          color: 'purple',
+          fillOpacity: 0.8
+        };
+      break;
+
+    }
+  },
+    onEachFeature: function(feature,layer){
+      layer.bindPopup(feature.properties.name.toString())
+    }
+  });
+  var points=new L.GeoJSON.AJAX("{%url 'business:supply'%}",{
+
+    onEachFeature:function(feature,layer){
+      layer.bindPopup(feature.properties.telephone.toString())
+    }
+  });
+  datasets.addTo(map);
+  points.addTo(map);
+
+  var baseLayers = {
+    "OSM": osm,
+  }
+
+  var groupedOverlays = {
+    "Layers": {
+      "Counties": datasets,
+      "Suppliers": points
+    }
+
+  };
+  L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
+
+L.easyButton('fa-compass',
+  function (){
+    $('.leaflet-routing-container').is(':visible') ? routing.removeFrom(map) : routing.addTo(map)
+  },
+  'Routing'
+).addTo(map);
+
+
+function createButton(label, container) {
+    var btn = L.DomUtil.create('button', '', container);
+    btn.setAttribute('type', 'button');
+    btn.innerHTML = label;
+    return btn;
+}
+}
+
+  </script>
+{%leaflet_map 'gis' callback='window.our_layers'%}
+</div>
+  {%else%}
+<a href="{%url 'account:login'%}"><button class="btn text-white " style=background-color:#9232d3;>Login</button></a>
+  {%endif%}
+{%endblock%}

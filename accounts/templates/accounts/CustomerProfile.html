@@ -1,0 +1,63 @@
+{%extends 'accounts/base.html'%}
+{%load crispy_forms_tags%}
+{%load leaflet_tags%}
+{%leaflet_js%}
+{%leaflet_css%}
+{%block content%}
+<div class="container">
+  <div class="col-sm-10">
+  <div class="card shadow-lg" style=background-color:#ffffff;>
+    <div class="card-header text-white" style=background-color:#6d1af5;>
+      <legend>My Profile.</legend>
+      </div>
+      <div class="card-body m-1">
+        <div class="row">
+          <div class="col-sm-2">
+  <img class="rounded-circle" height="100" width="100" src="{{custProfile.image.url}}" alt="edit">
+</div>
+<div class="col-sm-6">
+<b>Userame:</b> {{user.username}}<br>
+<b>Name:</b> {{user.first_name}} {{user.last_name}}<br>
+<b>Email:</b> {{user.email}}<br>
+{%if custProfile.status%}
+<b>Status: </b>{{custProfile.status}}<br>
+{%endif%}
+</div>
+<div class="col-sm-4">
+  <div class="card">
+  <div class="card-header text-white" style=background-color:#1b70df;>
+    <h6>Interests</h6>
+    </div>
+    <div class="card-body">
+  {%for cust in custProfile.interest.all%}
+{{forloop.counter}}. {{cust.category}}
+<br>
+{%endfor%}
+
+{%leaflet_map "gis"%}
+</div>
+  </div>
+  </div>
+</div>
+</div>
+<div class="col-sm-10">
+<div class="card border-white m-1" style=background-color:transparent;>
+  <div class="card-header text-white" style=background-color:#6e9e2e;>
+<legend>Update Profile.</legend>
+    </div>
+    <div class="card-body">
+<form method="POST" action="" enctype="multipart/form-data">
+{%csrf_token%}
+{{user_form|crispy}}
+{{form|crispy}}
+<div class="update" align=center>
+<button class="btn text-white col-sm-5" style=background-color:#e60023;>Update Profile</button>
+</div>
+  </form>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+{%endblock%}

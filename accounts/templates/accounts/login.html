@@ -1,0 +1,30 @@
+{%extends 'accounts/base.html'%}
+{%load crispy_forms_tags%}
+{%block content%}
+<div class="container p-1">
+  <div class="jum" align=center>
+    <div class="col-10 col-sm-5" align=left>
+  <div class="card shadow-lg text-white" style=background-color:#44505e;>
+    <div class="card-header text-white" style=background-color:dodgerblue;>
+<legend>Welcome Back,</legend>
+<h6>sign in to continue</h6>
+</div>
+<div class="card-body">
+<form method="POST" action="">
+{%csrf_token%}
+{{form|crispy}}
+<div class="btton" align=center>
+  <div class="forgot m-1" align=left>
+  <a href=""><small>Forgot Password?</small></a>
+  </div>
+<button class="btn shadow btn-primary col-sm-12">Sign In</button><br>
+<small class="text-muted m-1">Don't have an account?</small><br>
+</div>
+  </form>
+  <a href="{%url 'accounts:customer'%}"><button class="btn btn-primary col-sm-12">Create Account</button></a>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+{%endblock%}
